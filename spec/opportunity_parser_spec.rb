@@ -6,7 +6,6 @@ RSpec.describe OpportunityParser do
   describe "#parse" do
     it "parses CSV-like string into a sorted opportunities listing" do
       csv_fields = %i[title organization city state pay_min pay_max]
-
       csv_values = <<~CSV
         Lead Chef, Chipotle, Denver, CO, 10, 15
         Stunt Double, Equity, Los Angeles, CA, 15, 25
@@ -16,6 +15,8 @@ RSpec.describe OpportunityParser do
         Lead Guitarist, Philharmonic, Woodstock, NY, 100, 200
       CSV
 
+      output = described_class.parse(csv_values, fields_list: csv_fields)
+
       formatted_output = <<~TXT
         All Opportunities
         Title: Assistant to the Regional Manager, Organization: IBM, Location: Scranton, PA, Pay: 10-15
@@ -25,15 +26,11 @@ RSpec.describe OpportunityParser do
         Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
         Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
       TXT
-
-      output = described_class.parse(csv_values, fields_list: csv_fields)
-
       expect(output).to eq formatted_output
     end
 
     it "is robust to changes in column order and spacing" do
       csv_fields = %i[organization title city state pay_min pay_max]
-
       csv_values = <<~CSV
         Chipotle,     Lead Chef,                         Denver,      CO, 10,  15
         Equity,       Stunt Double,                      Los Angeles, CA, 15,  25
@@ -43,6 +40,8 @@ RSpec.describe OpportunityParser do
         Philharmonic, Lead Guitarist,                    Woodstock,   NY, 100, 200
       CSV
 
+      output = described_class.parse(csv_values, fields_list: csv_fields)
+
       formatted_output = <<~TXT
         All Opportunities
         Title: Assistant to the Regional Manager, Organization: IBM, Location: Scranton, PA, Pay: 10-15
@@ -52,14 +51,12 @@ RSpec.describe OpportunityParser do
         Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
         Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
       TXT
-
-      output = described_class.parse(csv_values, fields_list: csv_fields)
-
       expect(output).to eq formatted_output
     end
 
     it "can parse a mix of csv and json" do
       fields_list = %i[title organization city state pay_min pay_max]
+      json_split_string = "--JSON-INPUT-BELOW--"
       input_string = <<~STR
         Stunt Double, Equity, Los Angeles, CA, 15, 25
         Manager of Fun, IBM, Albany, NY, 30, 40
@@ -71,6 +68,10 @@ RSpec.describe OpportunityParser do
         {"title": "Cat Walker", "organization": "Rover", "city": "Forest Hills", "state": "NY", "pay": {"min":10, "max":15}}
       STR
 
+      output = described_class.parse(input_string,
+                                     fields_list: fields_list,
+                                     csv_json_separator: json_split_string)
+
       formatted_output = <<~TXT
         All Opportunities
         Title: Assistant to the Regional Manager, Organization: IBM, Location: Scranton, PA, Pay: 10-15
@@ -81,18 +82,12 @@ RSpec.describe OpportunityParser do
         Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
         Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
       TXT
-
-      json_split_string = "--JSON-INPUT-BELOW--"
-
-      output = described_class.parse(input_string,
-                                     fields_list: fields_list,
-                                     csv_json_separator: json_split_string)
-
       expect(output).to eq formatted_output
     end
 
     it "uniqueifies the list of records it outputs" do
       fields_list = %i[title organization city state pay_min pay_max]
+      json_split_string = "--JSON-INPUT-BELOW--"
       input_string = <<~STR
         Stunt Double, Equity, Los Angeles, CA, 15, 25
         Stunt Double, Equity, Los Angeles, CA, 15, 25
@@ -102,18 +97,15 @@ RSpec.describe OpportunityParser do
         {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
       STR
 
+      output = described_class.parse(input_string,
+                                     fields_list: fields_list,
+                                     csv_json_separator: json_split_string)
+
       formatted_output = <<~TXT
         All Opportunities
         Title: Dog Walker, Organization: Wag, Location: Flushing, NY, Pay: 10-15
         Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
       TXT
-
-      json_split_string = "--JSON-INPUT-BELOW--"
-
-      output = described_class.parse(input_string,
-                                     fields_list: fields_list,
-                                     csv_json_separator: json_split_string)
-
       expect(output).to eq formatted_output
     end
   end
