@@ -4,11 +4,11 @@ class Opportunity
   include Comparable
   attr_accessor :title, :organization, :location, :pay
 
-  def initialize(title, organization, city, state, pay_lower_bound, pay_upper_bound)
-    self.title = title
-    self.organization = organization
-    self.location = "#{city}, #{state}"
-    self.pay = "#{pay_lower_bound}-#{pay_upper_bound}"
+  def initialize(values)
+    self.title = values[:title]
+    self.organization = values[:organization]
+    self.location = "#{values[:city]}, #{values[:state]}"
+    self.pay = extract_pay(values)
   end
 
   def <=>(other)
@@ -26,5 +26,21 @@ class Opportunity
     fields
       .map { |field, value| "#{field}: #{value}" }
       .join(", ")
+  end
+
+  private
+
+  def extract_pay(values)
+    pay_min = values[:pay_min]
+    pay_max = values[:pay_max]
+    pay = values.fetch(:pay, {})
+
+    if pay_min && pay_max
+      "#{pay_min}-#{pay_max}"
+    elsif pay[:min] && pay[:max]
+      "#{pay[:min]}-#{pay[:max]}"
+    else
+      ""
+    end
   end
 end
