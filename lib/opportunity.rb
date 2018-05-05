@@ -15,17 +15,27 @@ class Opportunity
     title <=> other.title
   end
 
+  def hash
+    to_h.hash
+  end
+
+  def eql?(other)
+    hash == other.hash
+  end
+
   def to_s
-    fields = {}.tap do |field|
+    to_h
+      .map { |field, value| "#{field}: #{value}" }
+      .join(", ")
+  end
+
+  def to_h
+    {}.tap do |field|
       field["Title"] = title
       field["Organization"] = organization
       field["Location"] = location
       field["Pay"] = pay
     end
-
-    fields
-      .map { |field, value| "#{field}: #{value}" }
-      .join(", ")
   end
 
   private

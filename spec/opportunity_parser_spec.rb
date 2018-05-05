@@ -90,5 +90,31 @@ RSpec.describe OpportunityParser do
 
       expect(output).to eq formatted_output
     end
+
+    it "uniqueifies the list of records it outputs" do
+      fields_list = %i[title organization city state pay_min pay_max]
+      input_string = <<~STR
+        Stunt Double, Equity, Los Angeles, CA, 15, 25
+        Stunt Double, Equity, Los Angeles, CA, 15, 25
+        Dog Walker, Wag, Flushing, NY, 10, 15
+        --JSON-INPUT-BELOW--
+        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+      STR
+
+      formatted_output = <<~TXT
+        All Opportunities
+        Title: Dog Walker, Organization: Wag, Location: Flushing, NY, Pay: 10-15
+        Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
+      TXT
+
+      json_split_string = "--JSON-INPUT-BELOW--"
+
+      output = described_class.parse(input_string,
+                                     fields_list: fields_list,
+                                     csv_json_separator: json_split_string)
+
+      expect(output).to eq formatted_output
+    end
   end
 end
