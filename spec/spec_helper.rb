@@ -28,9 +28,7 @@ RSpec.configure do |config|
   # be too noisy due to issues in dependencies.
   config.warnings = true
 
-  if config.files_to_run.one?
-    config.default_formatter = "doc"
-  end
+  config.default_formatter = "doc"
 
   # Print the 10 slowest examples and example groups at the
   # end of the spec run, to help surface which specs are running
