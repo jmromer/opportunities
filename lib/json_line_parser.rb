@@ -3,13 +3,13 @@
 require "json"
 
 class JSONLineParser
-  def self.parse_lines(json_records_string, logger: nil)
+  def self.parse_lines(string, logger: nil)
+    json_records_string = (string || "").strip
     return [] if json_records_string.empty?
 
     json_records_string
       .split("\n")
       .map { |json_string| parse_line(json_string, logger: logger) }
-      .map { |record| Opportunity.new(**record) }
   end
 
   def self.parse_line(json_string, logger: nil)

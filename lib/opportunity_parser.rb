@@ -6,15 +6,19 @@ require "opportunity"
 require "set"
 
 module OpportunityParser
-  def self.parse(input_string, fields_list: [], csv_json_separator: "--json below--")
-    clean_csv_string, clean_json_string =
-      extract_csv_and_json(input_string, separator: csv_json_separator)
+  def self.parse(string, fields_list: [], csv_json_separator: "--json below--")
+    csv_string, json_string =
+      string.split(csv_json_separator)
 
     rows_from_csv =
-      CSVParser.parse(clean_csv_string, fields_list)
+      CSVParser
+        .parse(csv_string, fields_list)
+        .map { |record| Opportunity.new(**record) }
 
     rows_from_json =
-      JSONLineParser.parse_lines(clean_json_string)
+      JSONLineParser
+        .parse_lines(json_string)
+        .map { |record| Opportunity.new(**record) }
 
     row_listing =
       SortedSet
@@ -26,10 +30,5 @@ module OpportunityParser
       All Opportunities
       #{row_listing}
     STR
-  end
-
-  def self.extract_csv_and_json(string, separator:)
-    csv_string, json_string = string.split(separator)
-    [csv_string.strip, (json_string || "").strip]
   end
 end

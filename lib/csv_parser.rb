@@ -3,15 +3,12 @@
 require "csv"
 
 class CSVParser
-  def self.parse(csv_string, fields_list, logger = nil)
-    csv_with_headers = <<~CSV
-      #{fields_list.join(",")}
-      #{csv_string.gsub(/,\s+/, ",")}
-    CSV
+  def self.parse(csv_string, fields_list = [], logger = nil)
+    cleaned_csv = csv_string.strip.gsub(/,\s+/, ",")
 
-    CSV
-      .parse(csv_with_headers, headers: true, header_converters: :symbol)
-      .map { |record| Opportunity.new(**record) }
+    CSV.parse(cleaned_csv,
+              headers: fields_list,
+              header_converters: :symbol)
   rescue CSV::MalformedCSVError => err
     logger&.fatal(<<~ERR)
       CSV parser received invalid input:

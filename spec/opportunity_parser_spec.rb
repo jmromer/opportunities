@@ -5,7 +5,7 @@ require "opportunity_parser"
 RSpec.describe OpportunityParser do
   describe "#parse" do
     it "parses CSV-like string into a sorted opportunities listing" do
-      csv_fields = %i[title organization city state pay_min pay_max]
+      csv_fields = %w[title organization city state pay_min pay_max]
       csv_values = <<~CSV
         Lead Chef, Chipotle, Denver, CO, 10, 15
         Stunt Double, Equity, Los Angeles, CA, 15, 25
@@ -30,7 +30,7 @@ RSpec.describe OpportunityParser do
     end
 
     it "is robust to changes in column order and spacing" do
-      csv_fields = %i[organization title city state pay_min pay_max]
+      csv_fields = %w[organization title city state pay_min pay_max]
       csv_values = <<~CSV
         Chipotle,     Lead Chef,                         Denver,      CO, 10,  15
         Equity,       Stunt Double,                      Los Angeles, CA, 15,  25
@@ -55,7 +55,7 @@ RSpec.describe OpportunityParser do
     end
 
     it "can parse a mix of csv and json" do
-      fields_list = %i[title organization city state pay_min pay_max]
+      fields_list = %w[title organization city state pay_min pay_max]
       json_split_string = "--JSON-INPUT-BELOW--"
       input_string = <<~STR
         Stunt Double, Equity, Los Angeles, CA, 15, 25
@@ -86,7 +86,7 @@ RSpec.describe OpportunityParser do
     end
 
     it "uniqueifies the list of records it outputs" do
-      fields_list = %i[title organization city state pay_min pay_max]
+      fields_list = %w[title organization city state pay_min pay_max]
       json_split_string = "--JSON-INPUT-BELOW--"
       input_string = <<~STR
         Stunt Double, Equity, Los Angeles, CA, 15, 25
