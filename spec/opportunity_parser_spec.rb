@@ -108,5 +108,49 @@ RSpec.describe OpportunityParser do
       TXT
       expect(output).to eq formatted_output
     end
+
+    it "can parse a mixed input with no json" do
+      fields_list = %w[title organization city state pay_min pay_max]
+      json_split_string = "--NO-JSON-INPUT-BELOW--"
+      input_string = <<~STR
+        Lead Guitarist, Philharmonic, Woodstock, NY, 100, 200
+        Associate Tattoo Artist, Tit 4 Tat, Brooklyn, NY, 250, 275
+        Assistant to the Regional Manager, IBM, Scranton, PA, 10, 15
+        --NO-JSON-INPUT-BELOW--
+      STR
+
+      output = described_class.parse(input_string,
+                                     fields_list: fields_list,
+                                     csv_json_separator: json_split_string)
+
+      formatted_output = <<~TXT
+        All Opportunities
+        Title: Assistant to the Regional Manager, Organization: IBM, Location: Scranton, PA, Pay: 10-15
+        Title: Associate Tattoo Artist, Organization: Tit 4 Tat, Location: Brooklyn, NY, Pay: 250-275
+        Title: Lead Guitarist, Organization: Philharmonic, Location: Woodstock, NY, Pay: 100-200
+      TXT
+      expect(output).to eq formatted_output
+    end
+
+    it "can parse a mixed input with no csv" do
+      fields_list = %w[title organization city state pay_min pay_max]
+      json_split_string = "--JSON-INPUT-BELOW--"
+      input_string = <<~STR
+        --JSON-INPUT-BELOW--
+        {"title": "Lead Cat Walker", "organization": "Rover", "city": "Forest Hills", "state": "NY", "pay": {"min":10, "max":15}}
+        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+      STR
+
+      output = described_class.parse(input_string,
+                                     fields_list: fields_list,
+                                     csv_json_separator: json_split_string)
+
+      formatted_output = <<~TXT
+        All Opportunities
+        Title: Dog Walker, Organization: Wag, Location: Flushing, NY, Pay: 10-15
+        Title: Lead Cat Walker, Organization: Rover, Location: Forest Hills, NY, Pay: 10-15
+      TXT
+      expect(output).to eq formatted_output
+    end
   end
 end

@@ -12,7 +12,7 @@ module OpportunityParser
 
     rows_from_csv =
       CSVParser
-        .parse(csv_string, fields_list)
+        .parse(csv_string, headers: fields_list)
         .map { |record| Opportunity.new(**record) }
 
     rows_from_json =

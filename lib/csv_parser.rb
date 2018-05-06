@@ -3,11 +3,13 @@
 require "csv"
 
 class CSVParser
-  def self.parse(csv_string, fields_list = [], logger = nil)
+  def self.parse(csv_string, headers:, logger: nil)
+    raise ArgumentError, "headers list is empty" if headers.empty?
+
     cleaned_csv = csv_string.strip.gsub(/,\s+/, ",")
 
     CSV.parse(cleaned_csv,
-              headers: fields_list,
+              headers: headers,
               header_converters: :symbol)
   rescue CSV::MalformedCSVError => err
     logger&.fatal(<<~ERR)
