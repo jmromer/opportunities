@@ -2,7 +2,7 @@
 
 require "csv"
 
-class CSVParser
+module CSVParser
   def self.parse(csv_string, headers:, logger: nil)
     raise ArgumentError, "headers list is empty" if headers.empty?
 

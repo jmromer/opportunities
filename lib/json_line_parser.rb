@@ -2,7 +2,7 @@
 
 require "json"
 
-class JSONLineParser
+module JSONLineParser
   def self.parse_lines(string, logger: nil)
     json_records_string = (string || "").strip
     return [] if json_records_string.empty?
