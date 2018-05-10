@@ -27,9 +27,10 @@ module OpportunityParser
     filtered_output = filters.reduce(String.new) do |output_str, filter|
       filtered_listing = row_listing.select(&filter[:predicate])
 
-      output_str << <<~STR.strip
+      output_str << <<~STR
         #{filter[:label] || "Filtered"} Opportunities
         #{filtered_listing.join("\n")}
+
       STR
     end
 
