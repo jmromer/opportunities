@@ -24,11 +24,12 @@ module OpportunityParser
         .new(rows_from_csv + rows_from_json)
         .to_a
 
-    filtered_output = filters.reduce(String.new) do |output_str, filter|
+    filtered_output = filters.each_with_object(String.new).with_index do |(filter, output_str), i|
       filtered_listing = row_listing.select(&filter[:predicate])
+      filter_label = filter[:label] || "Opportunities Set #{i.next}"
 
       output_str << <<~STR
-        #{filter[:label] || "Filtered"} Opportunities
+        #{filter_label}
         #{filtered_listing.join("\n")}
 
       STR

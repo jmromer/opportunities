@@ -171,7 +171,7 @@ RSpec.describe OpportunityParser do
           Lead Guitarist, Philharmonic, Woodstock, NY, 100, 200
         STR
         filters_list = [
-          {label: "New York", predicate: -> (record) { record.state == "NY" }},
+          {label: "New York Opportunities", predicate: -> (record) { record.state == "NY" }},
         ]
 
         output = described_class.parse(input_string,
@@ -211,8 +211,8 @@ RSpec.describe OpportunityParser do
           {"name": "Lead Cephalopod Caretaker", "location": {"city": "Atlantis", "state": "Oceania"}, "organization": "Deep Adventures", "pay": {"min": 10, "max": 15}}
         STR
         filters_list = [
-          {label: "New York", predicate: -> (record) { record.state == "NY" }},
-          {label: "Lead", predicate: -> (record) { record.title =~ /Lead/ }},
+          {label: "New York Opportunities", predicate: -> (record) { record.state == "NY" }},
+          {label: "Lead Roles", predicate: -> (record) { record.title =~ /Lead/ }},
         ]
 
         output = described_class.parse(input_string,
@@ -236,7 +236,7 @@ RSpec.describe OpportunityParser do
           Title: Lead Guitarist, Organization: Philharmonic, Location: Woodstock, NY, Pay: 100-200
           Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
 
-          Lead Opportunities
+          Lead Roles
           Title: Lead Cephalopod Caretaker, Organization: Deep Adventures, Location: Atlantis, Oceania, Pay: 10-15
           Title: Lead Chef, Organization: Chipotle, Location: Denver, CO, Pay: 10-15
           Title: Lead Guitarist, Organization: Philharmonic, Location: Woodstock, NY, Pay: 100-200
