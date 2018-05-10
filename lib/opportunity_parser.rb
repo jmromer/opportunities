@@ -6,7 +6,7 @@ require "opportunity"
 require "set"
 
 module OpportunityParser
-  def self.parse(string, fields_list: [], csv_json_separator: "--json below--")
+  def self.parse(string, filter: nil, filter_label: nil, fields_list: [], csv_json_separator: "--json below--")
     csv_string, json_string =
       string.split(csv_json_separator)
 
@@ -24,11 +24,20 @@ module OpportunityParser
       SortedSet
         .new(rows_from_csv + rows_from_json)
         .to_a
-        .join("\n")
+
+    output_string = <<~STR
+      All Opportunities
+      #{row_listing.join("\n")}
+    STR
+
+    return output_string if filter.nil?
+
+    filtered_listing = row_listing.select(&filter)
 
     <<~STR
-      All Opportunities
-      #{row_listing}
+      #{output_string}
+      #{filter_label || "Filtered"} Opportunities
+      #{filtered_listing.join("\n")}
     STR
   end
 end
