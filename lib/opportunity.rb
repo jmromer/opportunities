@@ -7,8 +7,8 @@ class Opportunity
   def initialize(values = {})
     self.title = values[:title] || values[:name]
     self.organization = values[:organization]
-    self.city = values[:city]
-    self.state = values[:state]
+    self.city = values[:city] || values.dig(:location, :city)
+    self.state = values[:state] || values.dig(:location, :state)
     self.pay_min = values[:pay_min] || values.dig(:pay, :min)
     self.pay_max = values[:pay_max] || values.dig(:pay, :max)
   end

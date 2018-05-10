@@ -63,6 +63,13 @@ RSpec.describe Opportunity do
         expect(opp.location).to eq "California"
       end
     end
+
+    context "given a nested city and state" do
+      it "correctly returns both" do
+        opp = Opportunity.new(location: {city: "New York", state: "NY"})
+        expect(opp.location).to eq "New York, NY"
+      end
+    end
   end
 
   describe "#eql?" do
