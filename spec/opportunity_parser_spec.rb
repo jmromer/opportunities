@@ -27,7 +27,7 @@ RSpec.describe OpportunityParser do
           Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
           Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip
       end
 
       it "is robust to changes in column order and spacing" do
@@ -52,7 +52,7 @@ RSpec.describe OpportunityParser do
           Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
           Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe OpportunityParser do
           Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
           Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip
       end
 
       it "can parse mixed input with no json" do
@@ -108,7 +108,7 @@ RSpec.describe OpportunityParser do
           Title: Associate Tattoo Artist, Organization: Tit 4 Tat, Location: Brooklyn, NY, Pay: 250-275
           Title: Lead Guitarist, Organization: Philharmonic, Location: Woodstock, NY, Pay: 100-200
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip
       end
 
       it "can parse mixed input with no csv" do
@@ -129,7 +129,7 @@ RSpec.describe OpportunityParser do
           Title: Dog Walker, Organization: Wag, Location: Flushing, NY, Pay: 10-15
           Title: Lead Cat Walker, Organization: Rover, Location: Forest Hills, NY, Pay: 10-15
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip.strip
       end
     end
 
@@ -155,7 +155,7 @@ RSpec.describe OpportunityParser do
           Title: Dog Walker, Organization: Wag, Location: Flushing, NY, Pay: 10-15
           Title: Stunt Double, Organization: Equity, Location: Los Angeles, CA, Pay: 15-25
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip
       end
     end
 
@@ -170,11 +170,13 @@ RSpec.describe OpportunityParser do
           Assistant to the Regional Manager, IBM, Scranton, PA, 10, 15
           Lead Guitarist, Philharmonic, Woodstock, NY, 100, 200
         STR
+        filters_list = [
+          {label: "New York", predicate: -> (record) { record.state == "NY" }},
+        ]
 
         output = described_class.parse(input_string,
                                        fields_list: csv_fields_list,
-                                       filter: -> (record) { record.state == "NY" },
-                                       filter_label: "New York")
+                                       filters: filters_list)
 
         formatted_output = <<~TXT
           All Opportunities
@@ -190,7 +192,7 @@ RSpec.describe OpportunityParser do
           Title: Lead Guitarist, Organization: Philharmonic, Location: Woodstock, NY, Pay: 100-200
           Title: Manager of Fun, Organization: IBM, Location: Albany, NY, Pay: 30-40
         TXT
-        expect(output).to eq formatted_output
+        expect(output).to eq formatted_output.strip
       end
     end
   end

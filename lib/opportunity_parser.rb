@@ -6,9 +6,8 @@ require "opportunity"
 require "set"
 
 module OpportunityParser
-  def self.parse(string, filter: nil, filter_label: nil, fields_list: [], csv_json_separator: "--json below--")
-    csv_string, json_string =
-      string.split(csv_json_separator)
+  def self.parse(string, filters: [], fields_list: [], csv_json_separator: "--json below--")
+    csv_string, json_string = string.split(csv_json_separator)
 
     rows_from_csv =
       CSVParser
@@ -25,19 +24,20 @@ module OpportunityParser
         .new(rows_from_csv + rows_from_json)
         .to_a
 
-    output_string = <<~STR
+    filtered_output = filters.reduce(String.new) do |output_str, filter|
+      filtered_listing = row_listing.select(&filter[:predicate])
+
+      output_str << <<~STR.strip
+        #{filter[:label] || "Filtered"} Opportunities
+        #{filtered_listing.join("\n")}
+      STR
+    end
+
+    <<~STR.strip
       All Opportunities
       #{row_listing.join("\n")}
-    STR
 
-    return output_string if filter.nil?
-
-    filtered_listing = row_listing.select(&filter)
-
-    <<~STR
-      #{output_string}
-      #{filter_label || "Filtered"} Opportunities
-      #{filtered_listing.join("\n")}
+      #{filtered_output}
     STR
   end
 end
