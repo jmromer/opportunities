@@ -64,8 +64,8 @@ RSpec.describe OpportunityParser do
         Assistant to the Regional Manager, IBM, Scranton, PA, 10, 15
         Lead Guitarist, Philharmonic, Woodstock, NY, 100, 200
         --JSON-INPUT-BELOW--
-        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
-        {"title": "Cat Walker", "organization": "Rover", "city": "Forest Hills", "state": "NY", "pay": {"min":10, "max":15}}
+        {"name": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+        {"name": "Cat Walker", "organization": "Rover", "city": "Forest Hills", "state": "NY", "pay": {"min":10, "max":15}}
       STR
 
       output = described_class.parse(input_string,
@@ -93,8 +93,8 @@ RSpec.describe OpportunityParser do
         Stunt Double, Equity, Los Angeles, CA, 15, 25
         Dog Walker, Wag, Flushing, NY, 10, 15
         --JSON-INPUT-BELOW--
-        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
-        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+        {"name": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+        {"name": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
       STR
 
       output = described_class.parse(input_string,
@@ -137,8 +137,8 @@ RSpec.describe OpportunityParser do
       json_split_string = "--JSON-INPUT-BELOW--"
       input_string = <<~STR
         --JSON-INPUT-BELOW--
-        {"title": "Lead Cat Walker", "organization": "Rover", "city": "Forest Hills", "state": "NY", "pay": {"min":10, "max":15}}
-        {"title": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
+        {"name": "Lead Cat Walker", "organization": "Rover", "city": "Forest Hills", "state": "NY", "pay": {"min":10, "max":15}}
+        {"name": "Dog Walker", "organization": "Wag", "city": "Flushing", "state": "NY", "pay": {"min":10, "max":15}}
       STR
 
       output = described_class.parse(input_string,

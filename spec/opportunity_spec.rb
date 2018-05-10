@@ -3,6 +3,22 @@
 require "opportunity"
 
 RSpec.describe Opportunity do
+  describe "#title" do
+    context "given a 'title' attribute" do
+      it "sets the title to the passed-in title" do
+        opp = Opportunity.new(title: "Some Title")
+        expect(opp.title).to eq "Some Title"
+      end
+    end
+
+    context "given a 'name' attribute" do
+      it "sets the title to the passed-in 'name'" do
+        opp = Opportunity.new(name: "Some Title Name")
+        expect(opp.title).to eq "Some Title Name"
+      end
+    end
+  end
+
   describe "#pay" do
     context "given nested pay values" do
       it "returns the properly formatted range" do

@@ -5,7 +5,7 @@ class Opportunity
   attr_accessor :title, :organization, :city, :state, :pay_min, :pay_max
 
   def initialize(values = {})
-    self.title = values[:title]
+    self.title = values[:title] || values[:name]
     self.organization = values[:organization]
     self.city = values[:city]
     self.state = values[:state]
