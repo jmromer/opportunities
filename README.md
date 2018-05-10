@@ -1,6 +1,8 @@
 OpportunityParser
 =================
 
+[![CircleCI][circleci-svg]][circleci-badge]
+
 Purpose
 -------
 
@@ -154,3 +156,8 @@ Title: Lead Cephalopod Caretaker, Organization: Deep Adventures, Location: Atlan
 Title: Lead Chef, Organization: Chipotle, Location: Denver, CO, Pay: 10-15
 Title: Lead Guitarist, Organization: Philharmonic, Location: Woodstock, NY, Pay: 100-200
 ```
+
+
+[circleci-badge]: https://circleci.com/gh/jmromer/opportunities/tree/master
+[circleci-svg]: https://circleci.com/gh/jmromer/opportunities/tree/master.svg?style=svg
+
